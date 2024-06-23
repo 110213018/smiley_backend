@@ -11,4 +11,4 @@
     $password = "";
     $database = "smiley";
 
-    $connectNow = new mysqli($serverHost, $user, $password, $database);
+    $connectNow = new mysqli($serverHost, $user, $password, $database); // 創造一個新的 mySQLi 物件，用於連接 mySQL datebase
