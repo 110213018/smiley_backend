@@ -117,7 +117,7 @@ if __name__ =="__main__":
     statistics = []
     statistics = stats(finalpredict) # 數據分析
 
-    save_db()
+    save_db(statistics)
 
     tEnd = time.time()
     print(f"執行花費{tEnd-tStart}秒。")
