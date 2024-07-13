@@ -18,6 +18,8 @@ def get_diary_content(diary_id):
         return result[0]
     else:
         return None
+
+def
 def save_db(date, emotion_counts):
     db = mysql.connector.connect(
         host="localhost",
