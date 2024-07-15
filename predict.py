@@ -3,6 +3,7 @@ import time
 from transformers import BertTokenizer, BertModel
 import torch
 import model_db
+from datetime import datetime
 
 def predict(listData):
     dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
@@ -117,7 +118,8 @@ if __name__ =="__main__":
     statistics = []
     statistics = stats(finalpredict) # 數據分析
 
-    save_db(statistics)
+    date = datetime.now().strftime('%Y-%m-%d')
+    save_db(date, statistics, diary_id)
 
     tEnd = time.time()
     print(f"執行花費{tEnd-tStart}秒。")
