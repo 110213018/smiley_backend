@@ -1,4 +1,5 @@
 import mysql.connector
+
 def get_diary_content(diary_id):
     db = mysql.connector.connect(
         host="localhost",
@@ -29,7 +30,7 @@ def save_db(date, emotion_counts, diary_id):
 
     cursor = db.cursor()
     query = """
-    INSERT INTO analysis (diary_id, date, sadness, disgust, like, anger, happiness, other)
+    INSERT INTO analysis (diary_id, date, sadness, disgust, `like`, anger, happiness, other)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     data = (diary_id, date, emotion_counts[2], emotion_counts[3], emotion_counts[1], emotion_counts[4], emotion_counts[5], emotion_counts[0])
@@ -37,4 +38,3 @@ def save_db(date, emotion_counts, diary_id):
     db.commit()
     cursor.close()
     db.close()
-if __name__ == "__main__":

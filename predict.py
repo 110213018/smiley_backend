@@ -63,41 +63,42 @@ def spilt(article):
             data.append(sentence)
     return data
 
+
 def stats(finalpredict):
-    total = 0 # 總共以及各情緒數量
-    other = 0 # 0
-    like = 0 # 1
-    sadness = 0 # 2
-    disgust = 0 # 3
-    anger = 0 # 4
-    happiness = 0 # 5
-    data = []
+    total = len(finalpredict)  # 總共的情緒數量
+    other = 0  # 0
+    like = 0   # 1
+    sadness = 0  # 2
+    disgust = 0  # 3
+    anger = 0    # 4
+    happiness = 0  # 5
+    
+    # Initialize data list to store counts for each emotion
+    data = [0] * 6
+    
+    # Count occurrences of each emotion
     for i in finalpredict:
         if i == 0:
             other += 1
-            total += 1
-        if i == 1:
+        elif i == 1:
             like += 1
-            total += 1
-        if i == 2:
+        elif i == 2:
             sadness += 1
-            total += 1
-        if i == 3:
+        elif i == 3:
             disgust += 1
-            total += 1
-        if i == 4:
+        elif i == 4:
             anger += 1
-            total += 1
-        if i == 5:
+        elif i == 5:
             happiness += 1
-            total += 1
-    for i in range(len):
-        data[0].append(other)
-        data[1].append(like)
-        data[2].append(sadness)
-        data[3].append(disgust)
-        data[4].append(anger)
-        data[5].append(happiness)
+    
+    # Assign counts to data list in corresponding index positions
+    data[0] = other/total*100
+    data[1] = like/total*100
+    data[2] = sadness/total*100
+    data[3] = disgust/total*100
+    data[4] = anger/total*100
+    data[5] = happiness/total*100
+    
     return data
 
 
@@ -105,11 +106,12 @@ if __name__ =="__main__":
     tStart = time.time()
     # article = str(input("請輸入你的想法: "))
 
-    diaryId = str(input("請輸入日記id: "))
+    diary_Id = str(input("請輸入日記id: "))
     
     listData = []
 
-    listData = get_diary_content(diaryId)
+    articles = []
+    articles = model_db.get_diary_content(diary_Id)
 
     listData = spilt(articles) # 斷句
     finalpredict = predict(listData) # 最終預測結果
@@ -119,7 +121,7 @@ if __name__ =="__main__":
     statistics = stats(finalpredict) # 數據分析
 
     date = datetime.now().strftime('%Y-%m-%d')
-    save_db(date, statistics, diary_id)
+    model_db.save_db(date, statistics, diary_Id)
 
     tEnd = time.time()
     print(f"執行花費{tEnd-tStart}秒。")
