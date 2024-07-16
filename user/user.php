@@ -27,7 +27,7 @@ if ((isset($_FILES['photo']) || isset($_POST['default_photo'])) && isset($_POST[
     $firebase_user_id = $_POST['firebase_user_id'];
 
     if (isset($_POST['default_photo']) && $_POST['default_photo'] == 'true') {
-        $photo = 'default_avatar.png';
+        $photo = $_POST['photo']; //
         error_log("Using default image");
     } else if (isset($_FILES['photo'])) {
         $photo = $_FILES['photo']['name'];
