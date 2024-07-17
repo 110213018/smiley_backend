@@ -4,6 +4,7 @@ from transformers import BertTokenizer, BertModel
 import torch
 import model_db
 from datetime import datetime
+import random
 
 def predict(listData):
     dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
@@ -64,6 +65,7 @@ def spilt(article):
     return data
 
 
+
 def stats(finalpredict):
     total = len(finalpredict)  # 總共的情緒數量
     other = 0  # 0
@@ -92,15 +94,29 @@ def stats(finalpredict):
             happiness += 1
     
     # Assign counts to data list in corresponding index positions
-    data[0] = other/total*100
-    data[1] = like/total*100
-    data[2] = sadness/total*100
-    data[3] = disgust/total*100
-    data[4] = anger/total*100
-    data[5] = happiness/total*100
+    data[0] = sadness/total*100
+    data[1] = disgust/total*100
+    data[2] = like/total*100
+    data[3] = anger/total*100
+    data[4] = happiness/total*100
+    data[5] = other/total*100
     
     return data
 
+def randomToChooose(data): 
+    pos = [data[2], data[4]]
+    neg = [data[0], data[1], data[3]]
+
+    maxPos = max(pos)
+    maxNeg = max(neg)
+
+    maxPosIndex = pos.index(maxPos)
+    maxNegIndex = neg.index(maxNeg)
+
+    posRandom = random.randint(0, 5) if maxPosIndex == 0 else random.randint(6, 10)
+    negRandom = random.randint(0, 5) if maxNegIndex == 0 else (random.randint(6, 10) if maxNegIndex == 1 else random.randint(11, 15))
+    
+    return posRandom, negRandom
 
 if __name__ =="__main__":
     tStart = time.time()
@@ -119,9 +135,11 @@ if __name__ =="__main__":
 
     statistics = []
     statistics = stats(finalpredict) # 數據分析
+    posRandom, negRandom = randomToChooose(statistics)
 
     date = datetime.now().strftime('%Y-%m-%d')
-    model_db.save_db(date, statistics, diary_Id)
-
+    model_db.save_db_analysis(date, statistics, diary_Id)
+    model_db.save_db_diaries_mon_ang(diary_Id, posRandom, negRandom)
+    
     tEnd = time.time()
     print(f"執行花費{tEnd-tStart}秒。")

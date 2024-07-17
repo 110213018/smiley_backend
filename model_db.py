@@ -20,7 +20,7 @@ def get_diary_content(diary_id):
     else:
         return None
 
-def save_db(date, emotion_counts, diary_id):
+def save_db_analysis(date, emotion_counts, diary_id):
     db = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -38,3 +38,24 @@ def save_db(date, emotion_counts, diary_id):
     db.commit()
     cursor.close()
     db.close()
+
+def save_db_diaries_mon_ang(diary_id, monster_id, angel_id):
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="smiley"
+    )
+
+    cursor = db.cursor()
+    query = """
+    INSERT INTO diaries_mon_ang (diary_id, monster_id, angel_id)
+    VALUES (%s, %s, %s)
+    """
+    data = (diary_id, monster_id, angel_id)
+    cursor.execute(query, data)
+    db.commit()
+    cursor.close()
+    db.close()
+
+    
