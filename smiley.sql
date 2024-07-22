@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-07-16 18:19:21
+-- 產生時間： 2024-07-22 17:51:45
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -173,7 +173,8 @@ CREATE TABLE `emojis` (
 CREATE TABLE `friends` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `friend_id` int(11) NOT NULL
+  `friend_id` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='朋友列表';
 
 -- --------------------------------------------------------
@@ -273,7 +274,8 @@ INSERT INTO `users` (`id`, `firebase_user_id`, `name`, `photo`) VALUES
 (24, 'XL9XfIFe8EevNOk6VL9Bm5SzFyU2', 'ccc', 'default_avatar.png'),
 (25, 'oHC1OWt7t0f1YcAdezJxEuPCeBK2', 'ddd', '1000000035.jpg'),
 (26, '6iDUHcdUwzcPyxSO1G1h7vvSKrk1', 'eee', 'default_avatar.png'),
-(28, 'cdcfJaXZDxNHHCdBFNrlcAn4hvI2', 'fff', 'default_avatar.png');
+(28, 'cdcfJaXZDxNHHCdBFNrlcAn4hvI2', 'fff', 'default_avatar.png'),
+(30, 'Wd5lLyZTZThAqLySxqQNjWOWy3A2', 'rr', 'default_avatar_4.png');
 
 --
 -- 已傾印資料表的索引
@@ -467,7 +469,7 @@ ALTER TABLE `robot_chats`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '每一個使用者的 id', AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '每一個使用者的 id', AUTO_INCREMENT=31;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
