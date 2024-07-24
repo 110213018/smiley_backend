@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 if ((isset($_FILES['photo']) || isset($_POST['default_photo'])) && isset($_POST['name']) && isset($_POST['firebase_user_id'])) {
-    $name = $_POST['name'];
+    $friend_id = $_POST['name'];
     $firebase_user_id = $_POST['firebase_user_id'];
 
     if (isset($_POST['default_photo']) && $_POST['default_photo'] == 'true') {
@@ -45,10 +45,10 @@ if ((isset($_FILES['photo']) || isset($_POST['default_photo'])) && isset($_POST[
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
-        $statement->bind_param('sss', $firebase_user_id, $name, $photo);
+        $statement->bind_param('sss', $firebase_user_id, $friend_id, $photo);
         if ($statement->execute()) {
-            $user_id = $statement->insert_id; // 獲取插入的用戶ID
-            echo json_encode(array("success" => true, "user_id" => $user_id));
+            $friend_id = $statement->insert_id; // 獲取插入的用戶ID
+            echo json_encode(array("success" => true, "user_id" => $friend_id));
         } else {
             echo json_encode(array("success" => false, "message" => "Execute failed: " . $statement->error));
         }
