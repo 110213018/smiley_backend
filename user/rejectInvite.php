@@ -18,25 +18,26 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if (isset($_POST['user_id']) && isset($_POST['friend_id'])) {
     $user_id = $_POST['user_id'];
     $friend_id = $_POST['friend_id'];
-    $status = 'false';
 
     // 處理 SQL 注入攻擊
     $user_id = mysqli_real_escape_string($connectNow, $user_id);
     $friend_id = mysqli_real_escape_string($connectNow, $friend_id);
-    $status = mysqli_real_escape_string($connectNow, $status);
 
-    $sql = "INSERT INTO `friends` (`user_id`, `friend_id`, `status`) VALUES (?, ?, ?)";
+    // 修改為 DELETE 操作
+    $sql = "DELETE FROM `friends` WHERE `user_id` = ? AND `friend_id` = ?";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
-        $statement->bind_param('sss', $user_id, $friend_id, $status);
+        $statement->bind_param('ss', $user_id, $friend_id);
         if ($statement->execute()) {
-            echo json_encode(array(
-                "success" => true,
-                "user_id" => $user_id,
-                "friend_id" => $friend_id,
-                "status" => $status,
-            ));
+            if ($statement->affected_rows > 0) {
+                echo json_encode(array(
+                    "success" => true,
+                    "message" => "Friendship removed successfully."
+                ));
+            } else {
+                echo json_encode(array("success" => false, "message" => "No friendship found to remove."));
+            }
         } else {
             echo json_encode(array("success" => false, "message" => "Execution failed: " . $statement->error));
         }

@@ -15,18 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-if (isset($_POST['friend_id'])) {
-    $friend_id = $_POST['friend_id'];
+if (isset($_POST['user_id'])) {
+    $org_id = $_POST['user_id'];
 
-    // 處理 SQL 注入攻擊
-    $friend_id = mysqli_real_escape_string($connectNow, $friend_id);
-
-    // 查詢 `friends` 表中的 `user_id`
-    $sql = "SELECT `user_id` FROM `friends` WHERE `friend_id`=? AND `status`=0";
+    // Prevent SQL injection by using prepared statements
+    $sql = "SELECT `user_id`, `friend_id` FROM `friends` WHERE (`user_id`=? OR `friend_id`=?) AND `status`=1";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
-        $statement->bind_param('s', $friend_id);
+        $statement->bind_param('ss', $org_id, $org_id);
         $statement->execute();
         $result = $statement->get_result();
 
@@ -34,21 +31,24 @@ if (isset($_POST['friend_id'])) {
             $users = array();
             while ($row = $result->fetch_assoc()) {
                 $user_id = $row['user_id'];
+                $friend_id = $row['friend_id'];
 
-                // 使用 `user_id` 查詢 `users` 表中的 `name` 和 `photo`
+                $target_id = ($user_id == $org_id) ? $friend_id : $user_id;
+
+                // Query the `users` table for `name` and `photo`
                 $userSql = "SELECT `name`, `photo` FROM `users` WHERE `id`=?";
                 $userStatement = $connectNow->prepare($userSql);
 
                 if ($userStatement) {
-                    $userStatement->bind_param('i', $user_id);
+                    $userStatement->bind_param('i', $target_id);
                     $userStatement->execute();
-                    $userStatement->bind_result($friend_id, $photo);
+                    $userStatement->bind_result($name, $photo);
                     $userStatement->fetch();
 
-                    if ($friend_id && $photo) {
+                    if ($name && $photo) {
                         $users[] = array(
-                            "id" => (string)$user_id,
-                            "name" => $friend_id,
+                            "id" => (string)$target_id,
+                            "name" => $name,
                             "photo" => 'http://192.168.56.1/smiley_backend/img/photo/' . $photo
                         );
                     }

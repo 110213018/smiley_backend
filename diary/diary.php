@@ -66,4 +66,3 @@ if ($stmt){
 }
 // 關閉資料庫連接
 $connectNow->close();
-
