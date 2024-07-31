@@ -6,6 +6,7 @@ import model_db
 from datetime import datetime
 import random
 import sys
+from snownlp import SnowNLP
 
 def predict(listData):
     dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
@@ -27,43 +28,14 @@ def predict(listData):
     return predictions
 
 def spilt(article):
-    # 加载中文BERT模型和tokenizer
-    tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
-    model = BertModel.from_pretrained('bert-base-chinese')
+    s = SnowNLP(article)
 
-    # 文章 string
+    sentences = s.sentences
 
-    # 分成适当的长度
-    max_length = 512
-    article_chunks = [article[i:i+max_length] for i in range(0, len(article), max_length)]
-
-    # 断句
-    sentences = []
-    for chunk in article_chunks:
-        # 文本编码
-        inputs = tokenizer(chunk, return_tensors="pt", max_length=max_length, truncation=True)
-        with torch.no_grad():
-            outputs = model(**inputs)
-
-    # 判断断句位置（这里简单地基于句号判断）
-    tokenized_text = tokenizer.tokenize(chunk)
-    sentence_indices = [i for i, token in enumerate(tokenized_text) if token == '。' or token == ';' or token == '.' or token == '；' or token == '?' or token == '!' or token == '~' or token == '．' or token == '？' or token == '！' or token == ' ']
-
-    # 将文章断句
-    start = 0
-    for idx in sentence_indices:
-        sentence = tokenizer.decode(inputs.input_ids[0][start:idx+1])
-         
-
-        sentences.append(sentence)
-        start = idx + 1
-
-    # 打印结果
-    data = []
     for sentence in sentences:
-        if len(sentence) > 1:
-            data.append(sentence)
-    return data
+        print(sentence)
+    
+    return sentences
 
 def stats(finalpredict):
     total = len(finalpredict)  # 總共的情緒數量
