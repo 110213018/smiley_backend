@@ -49,6 +49,12 @@ if ($stmt){
 
     // 嘗試執行預準備語句並檢查結果
     if ($stmt->execute()) {
+        //
+        $diary_id = $stmt ->insert.id;
+
+        $command = escapeshellcmd("python3 C:\114project\smiley_backend\predict.py" . $diary_id);
+        $output = shell_exec($command)
+        //
         // 如果執行成功，返回成功的 JSON 響應
         http_response_code(200); // 設置 HTTP 狀態碼為 200 OK
         echo json_encode(array("success" => true, "message" => "日記已成功提交"));
