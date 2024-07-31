@@ -15,40 +15,36 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-if (isset($_POST['id'])) {
-    $id = $_POST['id'];
+if (isset($_POST['user_id']) && isset($_POST['friend_id'])) {
+    $user_id = $_POST['user_id'];
+    $friend_id = $_POST['friend_id'];
+    $status = 'false';
 
     // 處理 SQL 注入攻擊
-    $id = mysqli_real_escape_string($connectNow, $id);
+    $user_id = mysqli_real_escape_string($connectNow, $user_id);
+    $friend_id = mysqli_real_escape_string($connectNow, $friend_id);
+    $status = mysqli_real_escape_string($connectNow, $status);
 
-    $sql = "SELECT `name`, `photo` FROM `users` WHERE id=?";
+    $sql = "INSERT INTO `friends` (`user_id`, `friend_id`, `status`) VALUES (?, ?, ?)";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
-        $statement->bind_param('s', $id);
-        $statement->execute();
-        $statement->bind_result($name, $photo);
-        $statement->fetch();
-        
-        if ($name && $photo) {
-            // 返回成功並包含圖片路徑
-            $photoUrl = 'http://192.168.56.1/smiley_backend/img/photo/' . $photo;
+        $statement->bind_param('sss', $user_id, $friend_id, $status);
+        if ($statement->execute()) {
             echo json_encode(array(
                 "success" => true,
-                "name" => $name,
-                "photo" => $photoUrl
+                "user_id" => $user_id,
+                "friend_id" => $friend_id,
+                "status" => $status,
             ));
         } else {
-            // 未找到用戶
-            echo json_encode(array("success" => false, "message" => "User not found."));
+            echo json_encode(array("success" => false, "message" => "Execution failed: " . $statement->error));
         }
         $statement->close();
     } else {
-        // 查詢準備失敗
         echo json_encode(array("success" => false, "message" => "Prepare failed: " . $connectNow->error));
     }
 } else {
-    // 缺少 id 參數
     echo json_encode(array("success" => false, "message" => "Missing id parameter."));
 }
 
