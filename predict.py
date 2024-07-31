@@ -5,6 +5,7 @@ import torch
 import model_db
 from datetime import datetime
 import random
+import sys
 
 def predict(listData):
     dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
@@ -64,8 +65,6 @@ def spilt(article):
             data.append(sentence)
     return data
 
-
-
 def stats(finalpredict):
     total = len(finalpredict)  # 總共的情緒數量
     other = 0  # 0
@@ -121,8 +120,11 @@ def randomToChooose(data):
 if __name__ =="__main__":
     tStart = time.time()
     # article = str(input("請輸入你的想法: "))
-
-    diary_Id = str(input("請輸入日記id: "))
+    if len(sys.argv) != 2:
+        print("Usage:python predict.py <diary_id>")
+        sys.exit(1)
+    diary_Id = sys.argv[1]
+    # diary_Id = str(input("請輸入日記id: "))
     
     listData = []
 
