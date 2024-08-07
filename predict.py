@@ -77,9 +77,14 @@ def stats(finalpredict):
 def randomToChooose(data): 
     pos = [data[2], data[4]]
     neg = [data[0], data[1], data[3]]
+    oth = data[5]
+
+    if oth == 100:
+        neuRandom = 0
 
     maxPos = max(pos)
     maxNeg = max(neg)
+
 
     maxPosIndex = pos.index(maxPos)
     maxNegIndex = neg.index(maxNeg)
