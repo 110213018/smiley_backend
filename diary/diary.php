@@ -1,71 +1,59 @@
-<!-- 完成 diaries_table，與 analysis_table -->
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Content-Type: application/json; charset=UTF-8");
 
-// 檢查是否為 POST 請求
-if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    http_response_code(405); // 設置 HTTP 狀態碼為 405 Method Not Allowed
-    echo json_encode(array("success" => false, "message" => "Invalid request method"));
-    // 輸出：
-    // {
-    //     "success": false,
-    //     "message": "Invalid request method"
-    // }
-    exit();
-}
-
-// 檢查必需的參數
-// isset 檢查該值是否沒被定義或為空
-if (!isset($_POST['user_id']) || !isset($_POST['content']) || !isset($_POST['date'])) {
-    http_response_code(400); // 設置 HTTP 狀態碼為 400 Bad Request
-    echo json_encode(array("success" => false, "message" => "Missing required parameters"));
-    exit();
-}
-
-// 獲取POST請求中的資料
-$user_id = $_POST['user_id'];
-$content = $_POST['content'];
-$date = $_POST['date'];
-
-// 連接資料庫
 include '../connection.php';
 
-// 檢查連接
 if (!$connectNow) {
-    http_response_code(500); // 設置 HTTP 狀態碼為 500 Internal Server Error
     echo json_encode(array("success" => false, "message" => "Database connection failed"));
     exit();
 }
 
-// 插入資料到diaries表
-$sql = "INSERT INTO diaries (user_id, content, date) VALUES (?, ?, ?)"; // 定義 SQL 插入語句，使用 ? 作為佔位符
-$stmt = $connectNow->prepare($sql); // 把準備好的 SQL 指令和 MySQL 資料庫連結，創建一個預準備語句
-
-if ($stmt){
-    $stmt->bind_param("iss", $user_id, $content, $date); // 綁定參數到 SQL 指令中的佔位符，"iss" 表示參數類型分別為 integer 和 string
-
-    // 嘗試執行預準備語句並檢查結果
-    if ($stmt->execute()) {
-        // 獲取插入的 `diary_id` (53 的 insert.id 改成 insert_id)
-        $diary_id = $stmt->insert_id;
-        $command = escapeshellcmd("python3 C:\114project\smiley_backend\predict.py" . $diary_id);
-        $output = shell_exec($command);
-
-        echo json_encode(array(
-            "success" => true,
-            "message" => "日記已成功提交"
-            // 在這裡加要回傳到前端的東西~
-        ));
-    } else {
-        echo json_encode(array("success" => false, "message" => "Error: " . $stmt->error));
-    }
-    // 釋放預準備語句資源
-    $stmt->close();
-}else{
-    echo json_encode(array("success" => false, "message" => "Failed to prepare statement: " . $connectNow->error));
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(array("success" => false, "message" => "Invalid request method."));
+    exit();
 }
-// 關閉資料庫連接
+
+if (isset($_POST['user_id']) && isset($_POST['content']) && isset($_POST['date'])) {
+    $user_id = $_POST['user_id'];
+    $content = $_POST['content'];
+    $date = $_POST['date'];
+
+
+    // 處理 SQL 注入攻擊
+    $user_id = mysqli_real_escape_string($connectNow, $user_id);
+    $content = mysqli_real_escape_string($connectNow, $content);
+    $date = mysqli_real_escape_string($connectNow, $date);
+
+    // 更新 SQL 語句
+    $sql = "INSERT INTO diaries (user_id, content, date) VALUES (?, ?, ?)";
+    $statement = $connectNow->prepare($sql);
+
+    if ($statement) {
+        // 綁定參數
+        $statement->bind_param("sss", $user_id, $content, $date); 
+        if ($statement->execute()) {
+            // 獲取插入的 `diary_id` (53 的 insert.id 改成 insert_id)
+            $diary_id = $statement->insert_id;
+            $command = escapeshellcmd("python3 C:\114project\smiley_backend\predict.py" . $diary_id);
+            $output = shell_exec($command);
+
+            echo json_encode(array(
+                "success" => true,
+                "message" => "diary submit success"
+                // 在這裡加要回傳到前端的東西~
+            ));
+        } else {
+            echo json_encode(array("success" => false, "message" => "Execute failed: " . $statement->error));
+        }
+        $statement->close();
+    } else {
+        // 查詢準備失敗
+        echo json_encode(array("success" => false, "message" => "Prepare failed: " . $connectNow->error));
+    }
+} else {
+    echo json_encode(array("success" => false, "message" => "Missing parameter."));
+}
+
 $connectNow->close();
