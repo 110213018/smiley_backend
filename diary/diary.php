@@ -49,25 +49,22 @@ if ($stmt){
 
     // 嘗試執行預準備語句並檢查結果
     if ($stmt->execute()) {
-        //
-        $diary_id = $stmt ->insert.id;
-
+        // 獲取插入的 `diary_id` (53 的 insert.id 改成 insert_id)
+        $diary_id = $stmt->insert_id;
         $command = escapeshellcmd("python3 C:\114project\smiley_backend\predict.py" . $diary_id);
-        $output = shell_exec($command)
-        //
-        // 如果執行成功，返回成功的 JSON 響應
-        http_response_code(200); // 設置 HTTP 狀態碼為 200 OK
-        echo json_encode(array("success" => true, "message" => "日記已成功提交"));
+        $output = shell_exec($command);
+
+        echo json_encode(array(
+            "success" => true,
+            "message" => "日記已成功提交"
+            // 在這裡加要回傳到前端的東西~
+        ));
     } else {
-        // 如果執行失敗，返回錯誤的 JSON 響應，並包含錯誤訊息
-        http_response_code(500); // 設置 HTTP 狀態碼為 500 Internal Server Error
         echo json_encode(array("success" => false, "message" => "Error: " . $stmt->error));
     }
-
     // 釋放預準備語句資源
     $stmt->close();
 }else{
-    http_response_code(500); // 設置 HTTP 狀態碼為 500 Internal Server Error
     echo json_encode(array("success" => false, "message" => "Failed to prepare statement: " . $connectNow->error));
 }
 // 關閉資料庫連接
