@@ -15,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-if (isset($_POST['user_id']) && isset($_POST['color']) && isset($_POST['monster']) && isset($_POST['angel']) && isset($_POST['title']) && isset($_POST['date']) && isset($_POST['content'])) {
+if (isset($_POST['user_id']) && isset($_POST['text_color']) && isset($_POST['background_color']) && isset($_POST['monster']) && isset($_POST['angel']) && isset($_POST['title']) && isset($_POST['date']) && isset($_POST['content'])) {
     $user_id = $_POST['user_id'];
-    $color = $_POST['color'];
+    $text_color = $_POST['text_color'];
+    $background_color = $_POST['background_color'];
     $monster = $_POST['monster'];
     $angel = $_POST['angel'];
     $title = $_POST['title'];
@@ -26,7 +27,8 @@ if (isset($_POST['user_id']) && isset($_POST['color']) && isset($_POST['monster'
 
     // 處理 SQL 注入攻擊
     $user_id = mysqli_real_escape_string($connectNow, $user_id);
-    $color = mysqli_real_escape_string($connectNow, $color);
+    $text_color = mysqli_real_escape_string($connectNow, $text_color);
+    $background_color = mysqli_real_escape_string($connectNow, $background_color);
     $monster = mysqli_real_escape_string($connectNow, $monster);
     $angel = mysqli_real_escape_string($connectNow, $angel);
     $title = mysqli_real_escape_string($connectNow, $title);
@@ -34,12 +36,12 @@ if (isset($_POST['user_id']) && isset($_POST['color']) && isset($_POST['monster'
     $content = mysqli_real_escape_string($connectNow, $content);
 
     // 更新 SQL 語句
-    $sql = "INSERT INTO posts (user_id, color, monster, angel, title, date, content) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO posts (user_id, text_color, background_color, monster, angel, title, date, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
         // 綁定參數
-        $statement->bind_param('sssssss', $user_id, $color, $monster, $angel, $title, $date, $content);
+        $statement->bind_param('ssssssss', $user_id, $text_color, $background_color, $monster, $angel, $title, $date, $content);
         if ($statement->execute()) {
             echo json_encode(array("success" => true, "message" => "submitPost success"));
         } else {
