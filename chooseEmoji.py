@@ -36,12 +36,12 @@ def choose(angelType, monsterType):
     # source = "C:/xampp/htdocs/smiley_backend/img/angel_monster"
     num1 = random.randint(1, 6) 
     num2 = random.randint(1, 6) 
-    angel = f'{angelType}_{num1}.png'     
-    monster = f'{monsterType}_{num2}.png'     
+    angel = f'angel/{angelType}_{num1}.png'     
+    monster = f'monster/{monsterType}_{num2}.png'     
     if (angelType == 'other' and monsterType == 'other'):
         while (num1 == num2):
             num2 = random.randint(1, 6) 
-    monster = f'{monsterType}_{num2}.png' # 確保同時是other也不會是同一張
+    monster = f'monster/{monsterType}_{num2}.png' # 確保同時是other也不會是同一張
         
     return(angel, monster)
 
