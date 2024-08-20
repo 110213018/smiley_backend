@@ -45,11 +45,12 @@ if (isset($_POST['friend_id'])) {
                     $userStatement->bind_result($friend_id, $photo);
                     $userStatement->fetch();
 
+                    // ip 要改 192.168.56.1 -> 163.22.32.24
                     if ($friend_id && $photo) {
                         $users[] = array(
                             "id" => (string)$user_id,
                             "name" => $friend_id,
-                            "photo" => 'http://192.168.56.1/smiley_backend/img/photo/' . $photo
+                            "photo" => 'http://163.22.32.24/smiley_backend/img/photo/' . $photo
                         );
                     }
                     $userStatement->close();

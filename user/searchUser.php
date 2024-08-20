@@ -61,8 +61,8 @@ if (isset($_POST['friend_id'])) {
                 exit();
             }
 
-            // 返回成功並包含圖片路徑
-            $photoUrl = 'http://192.168.56.1/smiley_backend/img/photo/' . $photo;
+             // ip 要改 192.168.56.1 -> 163.22.32.24
+            $photoUrl = 'http://163.22.32.24/smiley_backend/img/photo/' . $photo;
             echo json_encode(array(
                 "success" => true,
                 "name" => $friend_id,

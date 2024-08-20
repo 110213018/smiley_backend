@@ -35,7 +35,6 @@ if (isset($_POST['user_id'])) {
 
                 $target_id = ($user_id == $org_id) ? $friend_id : $user_id;
 
-                // Query the `users` table for `name` and `photo`
                 $userSql = "SELECT `name`, `photo` FROM `users` WHERE `id`=?";
                 $userStatement = $connectNow->prepare($userSql);
 
@@ -45,11 +44,12 @@ if (isset($_POST['user_id'])) {
                     $userStatement->bind_result($name, $photo);
                     $userStatement->fetch();
 
+                    // ip 要改 192.168.56.1 -> 163.22.32.24
                     if ($name && $photo) {
                         $users[] = array(
                             "id" => (string)$target_id,
                             "name" => $name,
-                            "photo" => 'http://192.168.56.1/smiley_backend/img/photo/' . $photo
+                            "photo" => 'http://163.22.32.24/smiley_backend/img/photo/' . $photo
                         );
                     }
                     $userStatement->close();
