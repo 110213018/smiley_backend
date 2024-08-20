@@ -25,7 +25,7 @@ if (isset($_POST['user_id'])) {
             FROM `posts` 
             WHERE user_id=? 
             AND `date` BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND CURDATE() 
-            ORDER BY `date` DESC";  // // 今天及過去兩天之間 ,按日期降序排列
+            ORDER BY `id` DESC";  // // 今天及過去兩天之間 ,按日期降序排列
 
     $statement = $connectNow->prepare($sql);
 
