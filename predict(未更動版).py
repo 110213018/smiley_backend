@@ -6,6 +6,7 @@ import model_db
 from datetime import datetime
 import random
 import sys
+from snownlp import SnowNLP
 
 def predict(listData):
     dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
@@ -26,14 +27,11 @@ def predict(listData):
     predictions, raw_outputs = model.predict(listData)
     return predictions
 
-def split(article):
+def spilt(article):
     # 加载中文BERT模型和tokenizer
     tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
     model = BertModel.from_pretrained('bert-base-chinese')
 
-    # 文章 string
-
-    # 分成适当的长度
     max_length = 512
     article_chunks = [article[i:i+max_length] for i in range(0, len(article), max_length)]
 
@@ -58,7 +56,6 @@ def split(article):
         sentences.append(sentence)
         start = idx + 1
 
-    # 打印结果
     data = []
     for sentence in sentences:
         if len(sentence) > 1:
@@ -105,9 +102,14 @@ def stats(finalpredict):
 def randomToChooose(data): 
     pos = [data[2], data[4]]
     neg = [data[0], data[1], data[3]]
+    oth = data[5]
+
+    if oth == 100:
+        neuRandom = 0
 
     maxPos = max(pos)
     maxNeg = max(neg)
+
 
     maxPosIndex = pos.index(maxPos)
     maxNegIndex = neg.index(maxNeg)
@@ -119,36 +121,29 @@ def randomToChooose(data):
 
 if __name__ =="__main__":
     tStart = time.time()
-    article = "唯一缺點就是隔音太糟了！其他倒是不錯，但隔音很不好，雖然房內會附2副耳塞，但對於睡眠品質有點講究的朋友，真的不建議選這間。另外，我訂的是雙人房，一大床，不是拿兩小床來併成一張類雙人床！中間怎麼樣都是一個凸起線在哪裡，叫人怎麼睡！我被安排在117房，整晚時不時就會聽到加壓馬達的聲音！再加上隔壁房間的朋友打呼！真的是快瘋掉了！" 
-    listData = split(article) 
-    # 斷句 
-    print("斷句結果:", listData) 
-    finalpredict = predict(listData) 
-    # 最終預測結果 
-    print("預測結果:", finalpredict)
-
-
-    # if len(sys.argv) != 2:
-    #     print("Usage:python predict.py <diary_id>")
-    #     sys.exit(1)
-    # diary_Id = sys.argv[1]
+    # article = str(input("請輸入你的想法: "))
+    if len(sys.argv) != 2:
+        print("Usage:python predict.py <diary_id>")
+        sys.exit(1)
+    diary_Id = sys.argv[1]
     # diary_Id = str(input("請輸入日記id: "))
     
     listData = []
 
-    # articles = []
-    # articles = model_db.get_diary_content(diary_Id)
+    articles = []
+    articles = model_db.get_diary_content(diary_Id)
 
-    # listData = spilt(articles) # 斷句
-    # finalpredict = predict(listData) # 最終預測結果
-    # print(finalpredict)
+    listData = spilt(articles) # 斷句
+    finalpredict = predict(listData) # 最終預測結果
+    print(finalpredict)
 
+    statistics = []
     statistics = stats(finalpredict) # 數據分析
     posRandom, negRandom = randomToChooose(statistics)
 
     date = datetime.now().strftime('%Y-%m-%d')
-    # model_db.save_db_analysis(date, statistics, diary_Id)
-    # model_db.save_db_diaries_mon_ang(diary_Id, posRandom, negRandom)
+    model_db.save_db_analysis(date, statistics, diary_Id)
+    model_db.save_db_diaries_mon_ang(diary_Id, posRandom, negRandom)
     
     tEnd = time.time()
     print(f"執行花費{tEnd-tStart}秒。")
