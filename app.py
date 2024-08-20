@@ -4,6 +4,7 @@ import model_db
 from datetime import datetime
 import numpy as np
 import toDB
+import chooseEmoji
 
 app = Flask(__name__)
 
@@ -32,7 +33,13 @@ def analyze():
 
         # 傳換為數據
         statistics = predict.stats(finalpredict) 
-
+      
+        #選出圖片種類
+        angelType, monsterType = chooseEmoji.compare(statistics)
+        
+        #選出圖片檔名
+        angel, monster = chooseEmoji.choose(angelType, monsterType)
+    
         #現在時間
         current_date = datetime.now().strftime('%Y-%m-%d')
 
@@ -40,7 +47,7 @@ def analyze():
         if isinstance(finalpredict, np.ndarray):
             finalpredict = finalpredict.tolist()
         
-        if not toDB.save_db_analysis (uid, current_date, statistics):
+        if not toDB.save_db_analysis (uid, current_date, statistics, angel, monster):
             return jsonify({"error": "Failed to save data to database"}), 500
 
         # 回傳以上所有階段性成果
@@ -49,6 +56,8 @@ def analyze():
             # "listData": listData, 
             "finalpredict": finalpredict,
             "statistics":statistics,
+            "angel":angel, 
+            "monster": monster
             # "current_date":current_date
         }), 200
 

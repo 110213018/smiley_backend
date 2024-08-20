@@ -1,6 +1,6 @@
 import mysql.connector
 
-def save_db_analysis(user_id, date, statistics):
+def save_db_analysis(user_id, date, statistics, angel, monster):
     try:
         db = mysql.connector.connect(
             host="localhost",
@@ -11,8 +11,8 @@ def save_db_analysis(user_id, date, statistics):
         cursor = db.cursor()
 
         query = """
-        INSERT INTO analysis (user_id, date, sadness, disgust, `like`, anger, happiness, other)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO analysis (user_id, date, sadness, disgust, `like`, anger, happiness, other, angel, monster)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         data = (
             user_id, 
@@ -22,7 +22,9 @@ def save_db_analysis(user_id, date, statistics):
             statistics[2],  # like  
             statistics[3],  # anger  
             statistics[4],  # happiness  
-            statistics[5]   # other  
+            statistics[5],   # other
+            angel,
+            monster  
         )
 
         cursor.execute(query, data)
