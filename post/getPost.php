@@ -21,11 +21,14 @@ if (isset($_POST['user_id'])) {
     // 防止 SQL 注入
     $user_id = mysqli_real_escape_string($connectNow, $user_id);
 
-    $sql = "SELECT `text_color`, `background_color`, `monster`, `angel`, `title`, `date`, `content` 
-            FROM `posts` 
-            WHERE user_id=? 
-            AND `date` BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND CURDATE() 
-            ORDER BY `id` DESC";  // // 今天及過去兩天之間 ,按日期降序排列
+    // 使用 JOIN 從 users 表獲取對應的數據
+    $sql = "SELECT posts.id, posts.user_id, posts.text_color, posts.background_color, posts.monster, posts.angel, posts.title, posts.date, posts.content, 
+                   users.photo AS user_photo, users.name AS user_name
+            FROM posts 
+            JOIN users ON posts.user_id = users.id 
+            WHERE posts.user_id = ? 
+            AND posts.date BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND CURDATE() 
+            ORDER BY posts.id DESC";  // 今天及過去兩天之間, 按日期降序排列
 
     $statement = $connectNow->prepare($sql);
 
@@ -38,6 +41,8 @@ if (isset($_POST['user_id'])) {
         
         while ($row = $result->fetch_assoc()) {
             $posts[] = array(
+                "id" => $row['id'],
+                "user_id" => $row['user_id'],
                 "text_color" => $row['text_color'],
                 "background_color" => $row['background_color'],
                 "monster" => $row['monster'],
@@ -45,6 +50,8 @@ if (isset($_POST['user_id'])) {
                 "title" => $row['title'],
                 "date" => $row['date'],
                 "content" => $row['content'],
+                "user_photo" => $row['user_photo'],
+                "user_name" => $row['user_name']
             );
         }
         
@@ -60,7 +67,7 @@ if (isset($_POST['user_id'])) {
         echo json_encode(array("success" => false, "message" => "Prepare failed: " . $connectNow->error));
     }
 } else {
-    echo json_encode(array("success" => false, "message" => "Missing user_id or date parameter."));
+    echo json_encode(array("success" => false, "message" => "Missing user_id parameter."));
 }
 
 $connectNow->close();
