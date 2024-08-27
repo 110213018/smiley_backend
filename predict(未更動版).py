@@ -35,19 +35,19 @@ def spilt(article):
     max_length = 512
     article_chunks = [article[i:i+max_length] for i in range(0, len(article), max_length)]
 
-    # 断句
+    # 斷句
     sentences = []
     for chunk in article_chunks:
-        # 文本编码
+        # 文本编碼
         inputs = tokenizer(chunk, return_tensors="pt", max_length=max_length, truncation=True)
         with torch.no_grad():
             outputs = model(**inputs)
 
-    # 判断断句位置（这里简单地基于句号判断）
+    # 判斷斷句位置
     tokenized_text = tokenizer.tokenize(chunk)
     sentence_indices = [i for i, token in enumerate(tokenized_text) if token == '。' or token == ';' or token == '.' or token == '；' or token == '?' or token == '!' or token == '~' or token == '．' or token == '？' or token == '！' or token == ' ']
 
-    # 将文章断句
+    # 將文章斷句
     start = 0
     for idx in sentence_indices:
         sentence = tokenizer.decode(inputs.input_ids[0][start:idx+1])
