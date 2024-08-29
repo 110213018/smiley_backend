@@ -33,7 +33,7 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
                 OR 
                 (comments.post_user_id = ? AND comments.user_id != ?)
             )AND(
-                comments.content IS NOT NULL AND comments.content != '')";
+                comments.emoji_id != '0')";
 
     $statement = $connectNow->prepare($sql);
 
