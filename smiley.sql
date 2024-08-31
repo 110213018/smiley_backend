@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-08-20 04:41:35
+-- 產生時間： 2024-08-31 13:42:36
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -30,7 +30,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `analysis` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `diary_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `sadness` int(11) NOT NULL,
   `disgust` int(11) NOT NULL,
@@ -46,14 +45,12 @@ CREATE TABLE `analysis` (
 -- 傾印資料表的資料 `analysis`
 --
 
-INSERT INTO `analysis` (`id`, `user_id`, `diary_id`, `date`, `sadness`, `disgust`, `like`, `anger`, `happiness`, `other`, `angel`, `monster`) VALUES
-(3, 23, 3, '2024-07-15', 0, 0, 0, 0, 100, 0, '', ''),
-(5, 23, 8, '2024-08-04', 40, 30, 0, 15, 0, 15, '', ''),
-(6, 23, 9, '2024-08-02', 20, 5, 0, 15, 5, 60, '', ''),
-(7, 23, 10, '2024-08-01', 0, 5, 30, 5, 25, 35, '', ''),
-(9, 23, 12, '2024-07-30', 10, 10, 5, 50, 0, 25, '', ''),
-(10, 23, 13, '2024-07-29', 0, 5, 60, 0, 5, 30, '', ''),
-(11, 23, 14, '2024-08-07', 35, 20, 4, 10, 6, 25, '', '');
+INSERT INTO `analysis` (`id`, `user_id`, `date`, `sadness`, `disgust`, `like`, `anger`, `happiness`, `other`, `angel`, `monster`) VALUES
+(42, 23, '2024-08-20', 60, 0, 40, 0, 0, 0, 'angel/like_2.png', 'monster/sadness_5.png'),
+(49, 23, '2024-08-21', 0, 0, 50, 0, 50, 0, 'angel/like_6.png', 'monster/other_3.png'),
+(52, 23, '2024-08-22', 25, 0, 0, 25, 25, 25, 'angel/happiness_2.png', 'monster/sadness_5.png'),
+(53, 23, '2024-08-27', 0, 0, 0, 0, 100, 0, 'angel/happiness_3.png', 'monster/other_4.png'),
+(54, 23, '2024-08-27', 0, 0, 0, 0, 100, 0, 'angel/happiness_6.png', 'monster/other_2.png');
 
 -- --------------------------------------------------------
 
@@ -79,9 +76,30 @@ CREATE TABLE `comments` (
   `id` int(11) NOT NULL COMMENT '每一條評論的 id',
   `user_id` int(11) NOT NULL COMMENT '發送評論的人的 id',
   `post_id` int(11) NOT NULL COMMENT '評論發在哪個貼文',
-  `emoji_id` int(11) NOT NULL COMMENT '評論發送鍵 (表情貼) 的 id',
+  `post_user_id` int(11) NOT NULL,
+  `emoji_id` int(11) DEFAULT NULL COMMENT '評論發送鍵 (表情貼) 的 id',
   `content` mediumtext DEFAULT NULL COMMENT '評論，因為可以只按表情貼，所以可為 null'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='貼文評論';
+
+--
+-- 傾印資料表的資料 `comments`
+--
+
+INSERT INTO `comments` (`id`, `user_id`, `post_id`, `post_user_id`, `emoji_id`, `content`) VALUES
+(1, 23, 9, 39, 2, 'hello'),
+(2, 23, 9, 39, 4, ''),
+(3, 39, 9, 39, 0, 'bonjour'),
+(4, 39, 54, 23, 0, 'hi'),
+(5, 23, 9, 39, 0, 'happy'),
+(6, 39, 54, 23, 0, 'hello'),
+(7, 23, 54, 23, 0, 'hello i am 23'),
+(8, 23, 9, 39, 0, 'yes'),
+(9, 23, 9, 39, 3, ''),
+(10, 23, 9, 39, 1, ''),
+(11, 23, 9, 39, 5, ''),
+(12, 23, 9, 39, 1, ''),
+(15, 23, 9, 39, 0, 'helloooooo'),
+(16, 23, 9, 39, 0, 'kkk');
 
 -- --------------------------------------------------------
 
@@ -111,7 +129,12 @@ INSERT INTO `diaries` (`id`, `user_id`, `content`, `date`) VALUES
 (35, 23, 'hello 🤗', '2024-08-14'),
 (36, 23, 'my name is 😊', '2024-08-15'),
 (40, 23, 'hello hoho', '2024-08-18'),
-(41, 23, 'today is a beautiful day 💞🌞', '2024-08-19');
+(41, 23, 'today is a beautiful day 💞🌞', '2024-08-19'),
+(67, 23, '陽光特別明亮，讓人忍不住想要好好開始這一天。可是，隨著時間的推移，內心卻慢慢被一些說不上來的不安和焦慮感包圍，似乎有些事情在心底悄悄發酵，讓原本的平靜開始動盪。我想了很久，或許這種感覺來自於最近遇到的一些挑戰。不管是工作上的壓力還是生活中的瑣事，這些點點滴滴匯聚起來，像是杯中漸漸滿溢的水，讓我感到無所適從。午飯後，我試著放下這些負面的情緒，出去散步，讓自己沉浸在大自然的懷抱中。', '2024-08-20'),
+(74, 23, '今天跟爸媽久違的一起出門吃晚餐~ 吃的竟然還是我最愛的那一間義大利麵餐廳! 嗚嗚 吃美食真的好幸福🥰', '2024-08-21'),
+(77, 23, '剛才、本人只是去上個廁所，一出來就看到女友縮在床上抱著被子，我以為她又身體不舒服了，因為她剛結束生理期。  我一過去，就看到她哭了、還帶有啜泣的那種。  我趕緊問她怎麼了是不是不舒服、肚子痛還是出了什麼事。  結果她哭了好一會，終於稍微平靜一下，她跟我說  我想吃蛋糕 我想吃蛋糕 我想吃蛋糕  對、她因為想吃蛋糕想吃到哭。😀', '2024-08-22'),
+(80, 23, '今天過得好開心~久違的跟朋友出去玩。', '2024-08-27'),
+(81, 23, '今天天氣很好，但是太熱了', '2024-08-31');
 
 -- --------------------------------------------------------
 
@@ -123,6 +146,40 @@ CREATE TABLE `emojis` (
   `id` int(11) NOT NULL,
   `emoji` varchar(255) NOT NULL COMMENT 'emoji 圖片位址'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='發貼文評論時的表情貼';
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `flowers`
+--
+
+CREATE TABLE `flowers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `meaning` text NOT NULL,
+  `image` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 傾印資料表的資料 `flowers`
+--
+
+INSERT INTO `flowers` (`id`, `name`, `meaning`, `image`) VALUES
+(1, '薰衣草', '在寧靜的清香中，等待著那份溫柔的愛情，為你帶來心靈的平靜與安寧。', 'happiness_5.png'),
+(2, '雪松', '堅韌如山的守護者，承載著永恆的生命力量，讓希望在風雪中不滅。', 'happiness_2.png'),
+(3, '鼠尾草', '智慧的象徵，家庭和睦的守護者，讓心靈在細膩的芬芳中得到安慰。', 'happiness_3.png'),
+(4, '天竺葵', '幸福如陽光般照耀，願你的每一天都如花開般快樂與美好。', 'happiness_1.png'),
+(5, '橙橘', '喜悅與繁榮如同果實般圓滿，在生命的枝頭上綻放出幸福的光彩。', 'happiness_6.png'),
+(6, '芳香萬壽菊', '在愛慕中長久相守，生命如花般延續著對幸福的期盼。', 'like_2.png'),
+(7, '玫瑰', '愛情的火焰在心中燃燒，每一片花瓣都傳遞著熱情與浪漫。', 'like_3.png'),
+(8, '馬告', '在困境中堅韌不拔，以不屈的意志迎接生命中的每一次挑戰。', 'angry_3.png'),
+(9, '肖楠', '如同悲傷的旋律，在靜謐中撫慰心靈，讓眼淚化作夜空中的星光。', 'sadness_6.png'),
+(10, '薄荷', '在清新的氣息中，重生與希望再次蘇醒，帶來無限的活力。', 'disgust_2.png'),
+(11, '香蜂草', '安撫心靈的柔軟觸感，如同一抹溫暖的陽光照亮了黑暗的角落。', 'disgust_3.png'),
+(12, '洋甘菊', '忍耐與平和如同微風般輕拂心靈，帶來無盡的平靜與安寧。', 'disgust_4.png'),
+(13, '檸檬', '在酸澀中尋找清新的甘甜，讓生命如同檸檬般透亮而芳香。', 'disgust_5.png'),
+(14, '薑', '熱情如火般燃燒，力量在辛辣中綻放，帶來生命的動力與激情。', 'disgust_6.png'),
+(15, '土肉桂', '溫暖的香氣撫慰心靈，如同家中的爐火般帶來無盡的安慰與安全感。', 'angry_1.png');
 
 -- --------------------------------------------------------
 
@@ -186,13 +243,19 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `user_id`, `text_color`, `background_color`, `monster`, `angel`, `title`, `date`, `content`) VALUES
-(9, 39, '0xffffff53', '0xff222222', 'monster_3.png', '', 'hi', '2024-08-17', 'hiiiiii'),
-(15, 24, '0xffeca8a4', '0xff374295', 'monster_1.png', '', 'happy', '2024-08-18', 'happy 😊'),
-(16, 24, '0xffeca8a4', '0xff374295', '', 'monster_2.png', 'happy', '2024-08-15', 'happy 😊'),
-(17, 23, '0xff4285f4', '0xffa1e0e4', '', 'monster_1.png', 'hi', '2024-08-14', 'hiiiiii'),
-(31, 23, '0xff6b6c39', '0xffa7ba89', '', 'monster_3.png', 'happy', '2024-08-17', 'happy 😊'),
-(32, 23, '0xff6b6c39', '0xffa7ba89', 'monster_4.png', '', 'happy', '2024-08-18', 'happy 😊'),
-(36, 23, '0xffffffff', '0xffcd95bc', '', 'monster_2.png', 'sunny', '2024-08-19', 'hohoho');
+(9, 39, '0xffffff53', '0xff222222', 'disgust_3.png', '', 'hi', '2024-08-29', 'hiiiiii'),
+(15, 24, '0xffeca8a4', '0xff374295', 'disgust_4.png', '', 'happy', '2024-08-21', 'happy 😊'),
+(16, 24, '0xffeca8a4', '0xff374295', '', 'happiness_2.png', 'happy', '2024-08-20', 'happy 😊'),
+(31, 23, '0xff6b6c39', '0xffa7ba89', '', 'happiness_2.png', 'happy', '2024-08-17', 'happy 😊'),
+(32, 23, '0xff6b6c39', '0xffa7ba89', 'disgust_1.png', '', 'happy', '2024-08-18', 'happy 😊'),
+(36, 23, '0xffffffff', '0xffcd95bc', '', 'happiness_2.png', 'sunny', '2024-08-19', 'hohoho'),
+(41, 23, '0xffeb4335', '0xffffff4e', 'disgust_4.png', '', 'lemon 🍋', '2024-08-20', 'hello ~'),
+(42, 23, '0xff29979e', '0xffeca8a4', '', 'happiness_2.png', 'love 💕', '2024-08-20', 'hahaha 🤣'),
+(48, 23, '0xffffffff', '0xffcd95bc', '', 'happiness_2.png', 'love', '2024-08-21', '😍'),
+(51, 23, '0xff34a853', '0xfffbbc05', '', 'happiness_2.png', 'okokok', '2024-08-26', '💕💕😘'),
+(52, 23, '0xffffff00', '0xffaf333a', '', 'happiness_2.png', '', '2024-08-25', '今天跟女朋友膩在一起整天好幸福~~'),
+(53, 23, '0xff6b6c39', '0xffa7ba89', '', 'happiness_2.png', '', '2024-08-26', '123'),
+(54, 23, '0xffeca8a4', '0xff374295', 'disgust_1.png', '', '🤗', '2024-08-31', '🥰🥰🥰🥰🥰');
 
 -- --------------------------------------------------------
 
@@ -252,7 +315,7 @@ INSERT INTO `users` (`id`, `firebase_user_id`, `name`, `photo`) VALUES
 (28, 'cdcfJaXZDxNHHCdBFNrlcAn4hvI2', 'fff', 'default_avatar.png'),
 (30, 'Wd5lLyZTZThAqLySxqQNjWOWy3A2', 'rr', 'default_avatar_4.png'),
 (31, 'PGy6u8VsJkhEJz2hA4ps9kFsN2h1', 'ttt', 'default_avatar_2.png'),
-(39, 'vuiFiuM0ZgSTrZ9p3MiPZn2Apg83', 'ww', '1000000034.jpg'),
+(39, 'vuiFiuM0ZgSTrZ9p3MiPZn2Apg83', 'ww', '1000000035.jpg'),
 (43, 'N5aKoenVsyRFq8vdgwi3KXD26yS2', 'ppp', 'default_avatar_4.png'),
 (44, 'omghoS8ZLIYDI2lX2583QeRKJ0P2', 'ii', '1000000033.jpg'),
 (46, 'raqC1DEPcARidayEs5S6ETZwGT22', 'qq', 'default_avatar_5.png'),
@@ -295,6 +358,12 @@ ALTER TABLE `diaries`
 ALTER TABLE `emojis`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
+
+--
+-- 資料表索引 `flowers`
+--
+ALTER TABLE `flowers`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 資料表索引 `friends`
@@ -344,7 +413,7 @@ ALTER TABLE `users`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `analysis`
 --
 ALTER TABLE `analysis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `chats`
@@ -356,19 +425,25 @@ ALTER TABLE `chats`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '每一條評論的 id';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '每一條評論的 id', AUTO_INCREMENT=17;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `diaries`
 --
 ALTER TABLE `diaries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `emojis`
 --
 ALTER TABLE `emojis`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `flowers`
+--
+ALTER TABLE `flowers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `friends`
@@ -386,7 +461,7 @@ ALTER TABLE `informs`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '每一則貼文的 id', AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '每一則貼文的 id', AUTO_INCREMENT=56;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `robot_chats`
