@@ -47,6 +47,18 @@ if (isset($_POST['user_id']) && isset($_POST['post_id']) && (isset($_POST['emoji
                 // 綁定參數並執行插入操作
                 $statement_insert_comment->bind_param('sssss', $user_id, $post_id, $emoji_id, $content, $post_user_id);
                 if ($statement_insert_comment->execute()) {
+                    // 獲取插入的 id
+                    $inserted_id = $connectNow->insert_id;
+
+                    // 更新 pos 欄位
+                    $sql_update_pos = "UPDATE comments SET pos=? WHERE id=?";
+                    $statement_update_pos = $connectNow->prepare($sql_update_pos);
+                    if ($statement_update_pos) {
+                        $statement_update_pos->bind_param('ii', $inserted_id, $inserted_id);
+                        $statement_update_pos->execute();
+                        $statement_update_pos->close();
+                    }
+
                     echo json_encode(array("success" => true, "message" => "submitPost success"));
                 } else {
                     echo json_encode(array("success" => false, "message" => "Execute failed: " . $statement_insert_comment->error));
@@ -68,4 +80,4 @@ if (isset($_POST['user_id']) && isset($_POST['post_id']) && (isset($_POST['emoji
 }
 
 $connectNow->close();
-?>
+

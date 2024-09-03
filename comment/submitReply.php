@@ -15,16 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-if (isset($_POST['user_id']) && isset($_POST['post_id']) && isset($_POST['content'])) {
+if (isset($_POST['user_id']) && isset($_POST['post_id']) && isset($_POST['content']) && isset($_POST['pos'])) {
     $user_id = $_POST['user_id'];
     $post_id = $_POST['post_id'];
     $emoji_id = isset($_POST['emoji_id']) ? $_POST['emoji_id'] : '0'; // Default to '0' if not set
     $content = $_POST['content'];
+    $pos = $_POST['pos'];
 
     $user_id = mysqli_real_escape_string($connectNow, $user_id);
     $post_id = mysqli_real_escape_string($connectNow, $post_id);
     $emoji_id = mysqli_real_escape_string($connectNow, $emoji_id);
     $content = mysqli_real_escape_string($connectNow, $content);
+    $pos = mysqli_real_escape_string($connectNow, $pos);
 
     // 1. 查找 posts 表中符合 post_id 的 user_id，並將其作為 post_user_id 插入 comments 表中
     $sql_post_user = "SELECT user_id FROM posts WHERE id=?";
@@ -39,11 +41,11 @@ if (isset($_POST['user_id']) && isset($_POST['post_id']) && isset($_POST['conten
             $post_user_id = $row_post_user['user_id'];
 
             // 2. 插入數據到 comments 表中
-            $sql_insert_comment = "INSERT INTO comments (user_id, post_id, emoji_id, content, post_user_id) VALUES (?, ?, ?, ?, ?)";
+            $sql_insert_comment = "INSERT INTO comments (user_id, post_id, emoji_id, content, post_user_id, pos) VALUES (?, ?, ?, ?, ?, ?)";
             $statement_insert_comment = $connectNow->prepare($sql_insert_comment);
 
             if ($statement_insert_comment) {
-                $statement_insert_comment->bind_param('sssss', $user_id, $post_id, $emoji_id, $content, $post_user_id);
+                $statement_insert_comment->bind_param('ssssss', $user_id, $post_id, $emoji_id, $content, $post_user_id, $pos);
                 if ($statement_insert_comment->execute()) {
                     echo json_encode(array("success" => true, "message" => "submitPost success"));
                 } else {

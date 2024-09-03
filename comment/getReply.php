@@ -39,12 +39,12 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
             $sql = "SELECT comments.id, comments.user_id, comments.post_id, comments.post_user_id, comments.emoji_id, comments.content, users.photo AS avatar_url
                     FROM comments 
                     JOIN users ON comments.user_id = users.id 
-                    WHERE comments.post_id = ? AND comments.post_user_id = ? AND comments.user_id = ?";
+                    WHERE comments.post_id = ? AND comments.post_user_id = ? AND comments.content != '' AND comments.id != comments.pos";
 
             $stmt = $connectNow->prepare($sql);
 
             if ($stmt) {
-                $stmt->bind_param('sss', $post_id, $post_user_id, $post_user_id);
+                $stmt->bind_param('ss', $post_id, $post_user_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
 

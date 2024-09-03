@@ -24,7 +24,7 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
     $user_id = mysqli_real_escape_string($connectNow, $user_id);
 
     // 使用 JOIN 將 comments 表與 users 表結合，獲取 photo
-    $sql = "SELECT comments.id, comments.user_id, comments.post_id, comments.post_user_id, comments.emoji_id, comments.content, users.photo AS avatar_url
+    $sql = "SELECT comments.id, comments.user_id, comments.post_id, comments.post_user_id, comments.emoji_id, comments.content, comments.pos, users.photo AS avatar_url
             FROM comments 
             JOIN users ON comments.user_id = users.id 
             WHERE comments.post_id = ? 
@@ -33,7 +33,8 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
                 OR 
                 (comments.post_user_id = ? AND comments.user_id != ?)
             )AND(
-                comments.content IS NOT NULL AND comments.content != '')";
+                comments.content IS NOT NULL AND comments.content != '')
+            AND comments.id = comments.pos";
 
     $statement = $connectNow->prepare($sql);
 
@@ -52,6 +53,7 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
                 "post_user_id" => $row['post_user_id'],
                 "emoji_id" => $row['emoji_id'],
                 "content" => $row['content'],
+                "pos" => $row['pos'],
                 "avatar_url" => $row['avatar_url'],
             );
         }
