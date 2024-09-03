@@ -26,21 +26,21 @@ def analyze():
         received_data = {"uid": uid, "article": article}
         
         # 斷句
-        # listData = predict.split(article)
+        listData = predict.split(article)
         
-        # # 分析情緒
-        # finalpredict = predict.predict(listData)
+        # 分析情緒
+        finalpredict = predict.predict(listData)
 
-        # # 傳換為數據
-        # statistics = predict.stats(finalpredict) 
+        # 傳換為數據
+        statistics = predict.stats(finalpredict) 
       
         # #選出圖片種類
-        # angelType, monsterType = chooseEmoji.compare(statistics)
+        angelType, monsterType = chooseEmoji.compare(statistics)
         
         # #選出圖片檔名
-        # angel, monster = chooseEmoji.choose(angelType, monsterType)
+        angel, monster = chooseEmoji.choose(angelType, monsterType)
     
-        #現在時間
+        # #現在時間
         current_date = datetime.now().strftime('%Y-%m-%d')
 
         # 如果 finalpredict 是 ndarray，先将其转换为列表
@@ -52,12 +52,12 @@ def analyze():
 
         # 回傳以上所有階段性成果
         return jsonify({
-            # "received_data": received_data, 
+            "received_data": received_data, 
             # "listData": listData, 
-            # "finalpredict": finalpredict,
-            # "statistics":statistics,
-            # "angel":angel, 
-            # "monster": monster
+            "finalpredict": finalpredict,
+            "statistics":statistics,
+            "angel":angel, 
+            "monster": monster,
             "current_date":current_date
         }), 200
 
