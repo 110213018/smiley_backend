@@ -16,24 +16,31 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 if (isset($_POST['friend_id'])) {
-    $friend_id = $_POST['friend_id'];
+    $friend_id = $_POST['friend_id']; //23
 
     // 處理 SQL 注入攻擊
     $friend_id = mysqli_real_escape_string($connectNow, $friend_id);
 
-    // 查詢 `friends` 表中的 `user_id`
-    $sql = "SELECT `user_id` FROM `friends` WHERE `friend_id`=? AND `status`=0";
+    // 查詢 friends 表中的 user_id 或 friend_id
+    $sql = "SELECT 
+                CASE 
+                    WHEN user_id = ? THEN friend_id
+                    WHEN friend_id = ? THEN user_id
+                END AS related_id
+            FROM friends
+            WHERE (friend_id = ? OR user_id = ?) AND status = 0";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
-        $statement->bind_param('s', $friend_id);
+        // 將變數綁定到 SQL 語句
+        $statement->bind_param('ssss', $friend_id, $friend_id, $friend_id, $friend_id);
         $statement->execute();
         $result = $statement->get_result();
 
         if ($result->num_rows > 0) {
             $users = array();
             while ($row = $result->fetch_assoc()) {
-                $user_id = $row['user_id'];
+                $user_id = $row['related_id'];
 
                 // 使用 `user_id` 查詢 `users` 表中的 `name` 和 `photo`
                 $userSql = "SELECT `name`, `photo` FROM `users` WHERE `id`=?";
