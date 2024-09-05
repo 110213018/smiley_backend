@@ -50,10 +50,10 @@ if (isset($_POST['user_id'])) {
             ];
 
             $musicPath = isset($musicFiles[$maxEmotion]) ? $musicFiles[$maxEmotion] : $musicFiles['other'];
-            echo json_encode(array("success" => true, "music_path" => "http://192.168.56.1/smiley_backend/audio/".$musicPath, "message" => true));
+            echo json_encode(array("success" => true, "music_path" => "http://163.22.32.24/smiley_backend/audio/".$musicPath, "message" => true));
         } else {
             // 沒有記錄則播放 'other' 的音樂
-            echo json_encode(array("success" => true, "music_path" => "http://192.168.56.1/smiley_backend/audio/Creamy.mp3", "message" => false));
+            echo json_encode(array("success" => true, "music_path" => "http://163.22.32.24/smiley_backend/audio/Creamy.mp3", "message" => false));
         }
 
         $statement->close();

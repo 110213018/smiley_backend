@@ -36,7 +36,7 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
             $postRow = $postResult->fetch_assoc();
             $post_user_id = $postRow['user_id']; // 39
 
-            $sql = "SELECT comments.id, comments.user_id, comments.post_id, comments.post_user_id, comments.emoji_id, comments.content, users.photo AS avatar_url
+            $sql = "SELECT comments.id, comments.user_id, comments.post_id, comments.post_user_id, comments.emoji_id, comments.content, comments.pos, users.photo AS avatar_url
                     FROM comments 
                     JOIN users ON comments.user_id = users.id 
                     WHERE comments.post_id = ? AND comments.post_user_id = ? AND comments.content != '' AND comments.id != comments.pos";
@@ -58,6 +58,7 @@ if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
                         "post_user_id" => $row['post_user_id'],
                         "emoji_id" => $row['emoji_id'],
                         "content" => $row['content'],
+                        "pos" => $row['pos'],
                         "avatar_url" => $row['avatar_url'], // users table's photo
                     );
                 }

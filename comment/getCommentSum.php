@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if (isset($_POST['post_id'])) {
     $post_id = $_POST['post_id'];
 
-    $sql = "SELECT COUNT(id) FROM comments WHERE post_id = ?";
+    $sql = "SELECT COUNT(id) FROM comments WHERE post_id = ? AND pos != 0 AND content != '' ";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
