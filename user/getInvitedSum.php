@@ -18,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if (isset($_POST['user_id'])) {
     $user_id = $_POST['user_id'];
 
-    $sql = "SELECT COUNT(id) FROM friends WHERE (user_id = ? OR friend_id = ?) AND status = 0";
+    $sql = "SELECT COUNT(id) FROM friends WHERE friend_id = ? AND status = 0";
     $statement = $connectNow->prepare($sql);
 
     if ($statement) {
-        $statement->bind_param('ss', $user_id, $user_id);
+        $statement->bind_param('s', $user_id);
         $statement->execute();
         $statement->bind_result($count);
         $statement->fetch();
