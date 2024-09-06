@@ -48,7 +48,7 @@ if ((isset($_FILES['photo']) || isset($_POST['default_photo'])) && isset($_POST[
         $statement->bind_param('sss', $firebase_user_id, $friend_id, $photo);
         if ($statement->execute()) {
             $friend_id = $statement->insert_id; // 獲取插入的用戶ID
-            echo json_encode(array("success" => true, "user_id" => $friend_id));
+            echo json_encode(array("success" => true, "user_id" => $friend_id, "photo" => $photo,));
         } else {
             echo json_encode(array("success" => false, "message" => "Execute failed: " . $statement->error));
         }
