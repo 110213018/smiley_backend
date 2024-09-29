@@ -17,7 +17,7 @@ $date = date("Y-m-d");
 srand(strtotime($date));
 
 // 從資料庫中隨機選擇一個花
-$sql = "SELECT name, image, meaning FROM flowers ORDER BY RAND() LIMIT 1";
+$sql = "SELECT name, image, meaning, perfume FROM flowers ORDER BY RAND() LIMIT 1";
 $result = $connectNow->query($sql);
 
 
@@ -27,7 +27,8 @@ if ($result->num_rows > 0) {
     $flower = [
         "name" => $row["name"],
         "image" => $row["image"],
-        "meaning" => $row["meaning"]
+        "meaning" => $row["meaning"],
+        "perfume" => $row["perfume"]
     ];
     header('Content-Type: application/json');
     echo json_encode($flower);
