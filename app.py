@@ -6,7 +6,12 @@ import numpy as np
 import toDB
 import chooseEmoji
 
+
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
+
+
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -14,9 +19,11 @@ def analyze():
         data = request.get_json()
         if data is None:
             return jsonify({"error": "Invalid JSON"}), 400
-
         uid = data.get('uid')
         article = data.get('article')
+        if not article or not isinstance(article, str) or len(article.strip()) == 0:
+            return jsonify({"error": "Invalid or empty article provided"}), 400 
+
         if not uid:
             return jsonify({"error": "uid must be provided"}), 400
         if not article:
@@ -27,7 +34,9 @@ def analyze():
         
         # 斷句
         listData = predict.split(article)
-        
+        if not listData or len(listData) == 0:
+            return jsonify({"error": "Article could not be processed"}), 400
+        app.logger.info(f"listData: {listData}")
         # 分析情緒
         finalpredict = predict.predict(listData)
 
@@ -61,15 +70,24 @@ def analyze():
             "current_date":current_date
         }), 200
 
+    # except Exception as e:
+    #     return jsonify({
+    #         "received_data": received_data, 
+    #         "error": str(e)
+    #         }), 500
     except Exception as e:
+        # 打印完整的錯誤信息到伺服器日誌
+        app.logger.error(f"An error occurred: {str(e)}")
+        
         return jsonify({
             "received_data": received_data, 
             "error": str(e)
-            }), 500
+        }), 500
 
 @app.route('/')
 def home():
     return "Emotion Analysis API is running."
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.debug=True
+    app.run(host='163.22.32.24')

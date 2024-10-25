@@ -7,24 +7,27 @@ from datetime import datetime
 import random
 import sys
 
+# 在全局範圍內加載模型
+dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
+
+model_args = ClassificationArgs()
+model_args.train_batch_size = 64
+model_args.num_train_epochs = 3
+
+model = ClassificationModel(
+    'bert', 
+    dir_name, 
+    use_cuda=True,
+    cuda_device=0, 
+    num_labels=6, 
+    args=model_args
+)
+
+# 在 predict 函數中進行推斷
 def predict(listData):
-    dir_name = r'C:\114project\outputs\bert-base-Chinese-bs-64-epo-3'
-
-    model_args = ClassificationArgs()
-    model_args.train_batch_size = 64
-    model_args.num_train_epochs = 3
-
-    model = ClassificationModel(
-        'bert', 
-        dir_name , 
-        use_cuda = True,
-        cuda_device=0, 
-        num_labels = 6, 
-        args = model_args
-    )
-
     predictions, raw_outputs = model.predict(listData)
     return predictions
+
 
 def split(article):
     # 加载中文BERT模型和tokenizer
@@ -36,7 +39,6 @@ def split(article):
     # 分成适当的长度
     max_length = 512
     article_chunks = [article[i:i+max_length] for i in range(0, len(article), max_length)]
-
     # 断句
     sentences = []
     for chunk in article_chunks:
@@ -60,6 +62,7 @@ def split(article):
 
     # 打印结果
     data = []
+    
     for sentence in sentences:
         if len(sentence) > 1:
             data.append(sentence)

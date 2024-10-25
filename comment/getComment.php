@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 if (isset($_POST['post_id']) && isset($_POST['user_id'])) {
-    $id = $_POST['post_id'];
-    $user_id = $_POST['user_id'];
+    $id = $_POST['post_id']; //69
+    $user_id = $_POST['user_id']; //68
 
     // 防止 SQL 注入
     $id = mysqli_real_escape_string($connectNow, $id);
