@@ -40,6 +40,7 @@ if (isset($_POST['user_id']) && isset($_POST['date'])) {
                 'sadness' => $sadness,
                 'disgust' => $disgust,
                 'anger' => $anger,
+                'other' => $other,
             ));
         } else {
             // 未找到用戶
