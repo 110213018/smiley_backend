@@ -6,7 +6,7 @@ import numpy as np
 import toDB
 import chooseEmoji
 
-
+from waitress import serve
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -88,6 +88,6 @@ def analyze():
 def home():
     return "Emotion Analysis API is running."
 
+
 if __name__ == '__main__':
-    app.debug=True
-    app.run(host='163.22.32.24')
+    serve(app, host='163.22.32.24', port=5000, threads=4)

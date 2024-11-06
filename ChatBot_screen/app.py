@@ -12,7 +12,6 @@ import Example_Chat
 import re
 import mysql.connector
 from waitress import serve
-
 # Flask
 from flask_cors import CORS
 app = Flask(__name__)
@@ -347,11 +346,11 @@ def welcome():
     response_assistant['content'].replace(" ", "")
     response_assistant_clean = response_assistant
 
-    # 添加助手回覆訊息至對話紀錄
-    example_chat.append(response_assistant_clean)
+    # # 添加助手回覆訊息至對話紀錄
+    # example_chat.append(response_assistant_clean)
 
     # 儲存使用者回覆訊息對話到資料庫
-    saveToDB_RobotChat(user_id, "user", user_message, AboutTime.getCurrentTime_forSQL())
+    saveToDB_RobotChat(user_id, "user", firstMsg, AboutTime.getCurrentTime_forSQL())
     # 儲存助手回覆訊息對話到資料庫
     saveToDB_RobotChat(user_id, "assistant", response_assistant_clean["content"], AboutTime.getCurrentTime_forSQL())
 
@@ -380,7 +379,6 @@ def send_message_to_python():
 
     # 找尋是否有歷史對話紀錄，若有則添加
     userChatHistory = getChatHistory(user_id)
-
     if userChatHistory != []:
         history_messages = example_chat + userChatHistory
 
@@ -456,4 +454,4 @@ def saveToDB_RobotChat(user_id, role, sentence, time):
     return True
 
 if __name__ == '__main__':
-    serve(app, host='0.0.0.0', port=5001, threads=4)
+    serve(app, host='163.22.32.24', port=5001, threads=4)
