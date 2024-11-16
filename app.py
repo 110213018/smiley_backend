@@ -5,13 +5,56 @@ from datetime import datetime
 import numpy as np
 import toDB
 import chooseEmoji
-
+import clientData # 商家頁面用的用戶圖表
 from waitress import serve
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
 
+@app.route('/clientData', methods=['POST'])
+def client_data():
+    try:
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "Invalid JSON"}), 400
+        uid = data.get('uid')
+
+        if not uid:
+            return jsonify({"error": "uid must be provided"}), 400
+
+        # 回傳收到的東西
+        received_data = {"uid": uid}
+        
+        # 計算日期範圍
+        start_date, end_date = clientData.calculate_date_range()
+
+        # 週分析
+        result = clientData.process_emotion_data(uid, start_date, end_date)
+
+        # 日分析
+        dailyData = clientData.daily_analysis(uid, datetime.now())
+
+        # 回傳以上所有階段性成果
+        return jsonify({
+            "received_data": received_data, 
+            "result":result,
+            "dailyData":dailyData,
+        }), 200
+
+    # except Exception as e:
+    #     return jsonify({
+    #         "received_data": received_data, 
+    #         "error": str(e)
+    #         }), 500
+    except Exception as e:
+        # 打印完整的錯誤信息到伺服器日誌
+        app.logger.error(f"An error occurred: {str(e)}")
+        
+        return jsonify({
+            "received_data": received_data, 
+            "error": str(e)
+        }), 500
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
