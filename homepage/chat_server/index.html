@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Real-time Chat</title>
+    <style>
+      #chat {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #chat li {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      #contextInput {
+        width: 90%;
+        padding: 10px;
+      }
+      #sendButton {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Real-time Chat</h1>
+    <ul id="chat"></ul>
+    <input id="contextInput" autocomplete="off" placeholder="輸入您的消息..." />
+    <button id="sendButton">發送</button>
+
+    <!-- 引入 Socket.IO 客戶端庫 -->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+      // 連接到 Socket.IO 服務器
+      const socket = io('http://localhost:3000');
+
+      // 發送消息
+      document.getElementById('sendButton').addEventListener('click', () => {
+        const contextInput = document.getElementById('contextInput');
+        const context = contextInput.value.trim();
+        const user_id = '123'; // 替換為真實的用戶 ID
+
+        if (context) {
+          socket.emit('send_message', { user_id, context }); // 發送消息
+          contextInput.value = ''; // 清空輸入框
+        }
+      });
+
+      // 接收並顯示消息
+      socket.on('receive_message', (msg) => {
+        const chat = document.getElementById('chat');
+        const newMessage = document.createElement('li');
+        newMessage.textContent = `${msg.user_id}: ${msg.context}`;
+        chat.appendChild(newMessage);
+      });
+    </script>
+  </body>
+</html>

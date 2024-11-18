@@ -35,11 +35,15 @@ def client_data():
         # 日分析
         dailyData = clientData.daily_analysis(uid, datetime.now())
 
+        #最高情緒
+        highestEmotion = clientData.calculate_highest_emotion(dailyData)
+
         # 回傳以上所有階段性成果
         return jsonify({
             "received_data": received_data, 
-            "result":result,
+            "weeklyData":result,
             "dailyData":dailyData,
+            "highestEmotion":highestEmotion,
         }), 200
 
     # except Exception as e:

@@ -11,10 +11,10 @@ def fetch_analysis_result(user_id, date):
         API_URL,
         data={"user_id": user_id, "date": formatted_date} 
     )
-    #print(f"Fetching analysis for User ID: {user_id}, Date: {formatted_date}")
+    ##print(f"Fetching analysis for User ID: {user_id}, Date: {formatted_date}")
     
     # 打印完整的 API 回應
-    #print("API Response:", response.text, )
+    ##print("API Response:", response.text, )
     
     if response.status_code == 200:
         result = response.json()  
@@ -27,14 +27,28 @@ def fetch_analysis_result(user_id, date):
                 "anger": result.get("anger") or 0,  
                 "other": result.get("other") or 0  
             }
-            print(f'用戶{user_id}, 日期{date}, {analysis_result}')
+            #print(f'用戶{user_id}, 日期{date}, {analysis_result}')
             return analysis_result
-    print("沒有資料")
+    #print("沒有資料")
     return {}  
+
+# 最高情緒
+def calculate_highest_emotion(daily_data):
+    if not daily_data:
+        return "無數據"
+
+    emotions = {k: v for k, v in daily_data.items() if k in ["happiness", "like", "sadness", "disgust", "anger", "other"]}
+
+    # 找出數值最大的情緒
+    highest_emotion = max(emotions, key=emotions.get)
+    highest_value = emotions[highest_emotion]
+
+    #print(f"今日最高情緒：{highest_emotion}，數值：{highest_value}%")
+    return highest_emotion, highest_value
 
 # 週
 def process_emotion_data(user_id, start_date, end_date):
-    print(f"計算用戶 {user_id} 從 {start_date} 到 {end_date} 的情緒百分比 ")
+    #print(f"計算用戶 {user_id} 從 {start_date} 到 {end_date} 的情緒百分比 ")
     positive_sums = []  
     negative_sums = []  
     time = 0  
@@ -74,14 +88,14 @@ def process_emotion_data(user_id, start_date, end_date):
         "positive_sums": positive_sums,
         "negative_sums": negative_sums,
     }
-    print(f"共讀取 {time} 筆資料，週分析百分比為 {result}")
-    print("週分析完畢")
+    #print(f"共讀取 {time} 筆資料，週分析百分比為 {result}")
+    #print("週分析完畢")
     return result
 
 
 # 日
 def daily_analysis(user_id, date):
-    print(f"計算今日情緒百分比")
+    #print(f"計算今日情緒百分比")
     daily_data = fetch_analysis_result(user_id, date)  
     if daily_data:  
         emo_sum = (
@@ -94,7 +108,7 @@ def daily_analysis(user_id, date):
         if emo_sum > 0:  
             for key in ["happiness", "like", "sadness", "disgust", "anger"]:
                 daily_data[key] = round(daily_data[key] * 100 / emo_sum, 1)  
-        print("今日情緒百分比:", daily_data)
+        #print("今日情緒百分比:", daily_data)
         return daily_data  
     return None  
 
@@ -111,7 +125,7 @@ def calculate_date_range():
     
     start_date = end_date - timedelta(days=6)
     
-    # print(f"日期範圍: {start_date.strftime('%Y-%m-%d')} 到 {end_date.strftime('%Y-%m-%d')}")
+    # #print(f"日期範圍: {start_date.strftime('%Y-%m-%d')} 到 {end_date.strftime('%Y-%m-%d')}")
     return start_date, end_date
 
 # # 示例用法

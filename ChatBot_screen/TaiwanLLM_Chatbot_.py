@@ -7,7 +7,7 @@ from ollama import Client
 from flask import Flask, request, jsonify
 from datetime import datetime
 import time
-from OutsideInfo.weatherInfomation import WeatherForcast
+# from OutsideInfo.weatherInfomation import WeatherForcast
 import Example_Chat
 import re
 import mysql.connector
@@ -71,74 +71,7 @@ def getChatHistory(userID):
     finally:
         cursor.close()
         db.close()
-    # history_chat = """
-    #     歷史對話紀錄：
-    #     對話紀錄一：「
-    #         時間：『2024年8月14日』。
-    #         對話：『
-    #         {'role': 'user', 'content': "「User」：「早安」"},
-    #         {'role': 'assistant', 'content': "小蜜：早安User,現在時間是6:00！你吃早餐了嗎？"},
-    #         {'role': 'user', 'content': "「User」：「還沒，剛起床」"},
-    #         {'role': 'assistant', 'content': "小蜜：喔喔，來杯熱咖啡如何？"},
-    #         {'role': 'user', 'content': "「User」：「OK」"},
-    #         {'role': 'assistant', 'content': "小蜜：午安User,現在時間是12:00！午餐該吃什麼好呢？"},
-    #         {'role': 'user', 'content': "「User」：「不知道，超商吧」"},
-    #         {'role': 'assistant', 'content': "小蜜：又是超商？好吧，超商確實比較方便，但偶爾獎勵自己一些好吃的也不差呢"},
-    #         {'role': 'user', 'content': "「User」：「好吧」"},
-    #         {'role': 'assistant', 'content': "小蜜：嗨嗨User,現在時間是16:00！要不要去喝個下午茶呢"},
-    #         {'role': 'user', 'content': "「User」：「我也想，可是現在還在忙」"},
-    #         {'role': 'assistant', 'content': "小蜜：辛苦你了，等你忙完後一起去吃飯吧"},
-    #         {'role': 'user', 'content': "「User」：「嗯嗯」"},
-    #         {'role': 'assistant', 'content': "小蜜：晚安User,現在時間是18:00！想好晚餐要吃啥了嗎？我今天想吃咖哩!"},
-    #         {'role': 'user', 'content': "「User」：「那你覺得我要吃啥」"},
-    #         {'role': 'assistant', 'content': "小蜜：不知道耶，還是你想和我一起吃咖哩XD"},
-    #         {'role': 'user', 'content': "「User」：「好啊XD」"},
-    #         {'role': 'assistant', 'content': "小蜜：晚安User,現在時間是22:00！今天過得如何呢？有沒有發生什麼事？"},
-    #         {'role': 'user', 'content': "「User」：「今天有夠累，主管有夠機車」"},
-    #         {'role': 'assistant', 'content': "小蜜：嗯...辛苦你了...好好休息吧！"},
-    #         {'role': 'user', 'content': "「User」：「嗯」"},
-    #         {'role': 'assistant', 'content': "小蜜：晚安User,現在時間是3:00！不要太常熬夜呦！你的健康對我來說也是很重要的"},
-    #         {'role': 'user', 'content': "「User」：「我還在忙東西」"},
-    #         {'role': 'assistant', 'content': "小蜜：這麼晚了還在忙嗎？"},
-            
-    #         』。
-    #     」
-    # """
-    # history_chat = """
-    #     歷史對話紀錄：
-    #     對話紀錄一：「
-    #         時間：『2024年8月14日』。
-    #         對話：『
-    #             「User」：「早安」,
-    #             小蜜：早安User,現在時間是6:00！你吃早餐了嗎？,
-    #             「User」：「還沒，剛起床」,
-    #             小蜜：喔喔，來杯熱咖啡如何？,
-    #             「User」：「OK」,
-    #             小蜜：午安User,現在時間是12:00！午餐該吃什麼好呢？,
-    #             「User」：「不知道，超商吧」,
-    #             小蜜：又是超商？好吧，超商確實比較方便，但偶爾獎勵自己一些好吃的也不差呢,
-    #             「User」：「好吧」,
-    #             小蜜：嗨嗨User,現在時間是16:00！要不要去喝個下午茶呢,
-    #             「User」：「我也想，可是現在還在忙」,
-    #             小蜜：辛苦你了，等你忙完後一起去吃飯吧,
-    #             「User」：「嗯嗯」,
-    #             小蜜：晚安User,現在時間是18:00！想好晚餐要吃啥了嗎？我今天想吃咖哩!,
-    #             「User」：「那你覺得我要吃啥」,
-    #             小蜜：不知道耶，還是你想和我一起吃咖哩XD,
-    #             「User」：「好啊XD」,
-    #             小蜜：晚安User,現在時間是22:00！今天過得如何呢？有沒有發生什麼事？,
-    #             「User」：「今天有夠累，主管有夠機車」,
-    #             小蜜：嗯...辛苦你了...好好休息吧！,
-    #             「User」：「嗯」,
-    #             小蜜：晚安User,現在時間是3:00！不要太常熬夜呦！你的健康對我來說也是很重要的,
-    #             「User」：「我還在忙東西」,
-    #             小蜜：這麼晚了還在忙嗎？,
-    #         』。
-    #     」
-    # """
-    # history_chat = history_chat.replace("\n", "")
-    # history_chat = history_chat.replace(" ", "")
-    # return history_chat
+
 
 # 取得當前台灣時間 & 配合時間的問候語
 class AboutTime:
@@ -189,60 +122,6 @@ weatherInfo = getWeather()
 #     return "(時間：2024年8月15日, sadness: 80, disgust: 5, like: 0, anger: 10, happiness: 0, other: 5)"
 # userEmotions = getUserEmotions()
 
-# 取得使用者日記
-def getDiary():
-    history_Diary = f"""
-        日記一：「
-            紀錄時間：『2024年8月20日，星期二。』。
-            日記內容：『
-                今天是個特別讓人心動的日子！早上在咖啡店排隊時，偶然間與一個陌生人聊了起來。他對咖啡的熱情和深厚的知識讓我感到非常有趣，並且他那種真誠的微笑讓人很難不喜歡上他。
-                中午時，我居然又在公園裡碰到了他！但這次我們坐下來聊了很久，話題從咖啡延展到音樂、旅行和書籍。我們發現彼此有很多共同的愛好，這種感覺實在太美好了～
-                下午我回到家後，整個人都充滿了愉快的情緒。每當想起我們的對話，我都忍不住微笑。那種心動的感覺真是讓人難以忘懷。
-                今天的每一刻都讓我感到無比愉快，心裡充滿了對未來的期待和喜歡的感覺。
-            』
-        」
-        日記二：「
-            紀錄時間：『2024年8月20日，星期二。』。
-            日記內容：『
-                早上收到消息，一個很親近的朋友突然決定搬到其他城市去工作。這個消息對我來說非常震驚和難過，因為我們一起度過了很多快樂的時光，現在突然要分開，心裡感到無比的失落。
-                工作中也沒有什麼好消息，幾個重要的項目進展不順利，讓我感到壓力山大。同事們似乎也很忙碌，沒有時間互相支持和幫助，這讓我感到更加孤單和無助。
-                午餐時，本來想給自己買點喜歡的食物來振作一下心情，結果卻發現自己最愛的那家餐廳今天關門了。這小小的打擊讓我更覺得整個世界都在與我作對。
-                下午試著集中精神工作，但心情一直無法平靜下來，總是想起朋友離開的事。晚上回到家，感覺整個人都被悲傷和孤獨包圍，只能靜靜地躺在床上，默默流淚。
-            』
-        」
-        日記三：「
-            紀錄時間：『2024年8月20日，星期二。』。
-            日記內容：『
-                今天真是讓人惱火的一天！！！！早上在公司，老闆無緣無故對我發火，責怪我沒有完成一個根本不屬於我的任務。我試圖解釋，但他根本不聽，甚至威脅要扣我的薪水。這讓我感到極度不公平和憤怒
-                午餐時，本來打算和同事們一起放鬆一下，但餐廳服務態度極差，餐點還上錯了兩次。這一系列的小事累積下來，讓我心裡的怒火越來越旺。
-                下午回到辦公室，又收到客戶的無理要求和抱怨，這些明顯是他們自己的問題，卻都推到我頭上。我感到非常無力和憤怒，但只能強忍著，因為知道即使表達出來也無濟於事。
-                回家路上還遇到塞車，其他車輛的惡劣行為與三寶技術讓我心情更加煩躁。回到家後，本來期待能放鬆一下，才發現忘記停水公告，澡都無法洗了…
-            』
-        」
-        日記四：「
-            紀錄時間：『2024年8月20日，星期二。』。
-            日記內容：『
-                今天有夠糟糕。早上剛起床，我就感覺到肚子一陣翻騰，像是吃壞了什麼東西。強忍著不適去上班，結果途中還遇到堵車，車裡悶熱的空氣讓我感到更加噁心⋯
-                到了公司後，狀況並沒有好轉⋯同事帶來的早餐味道讓我更加難受。忍著不適處理工作，但無法集中精神，感覺頭昏眼花。午飯時間，同事們邀我去餐廳吃飯，我只能勉強陪同，但一進餐廳，濃烈的食物氣味讓我幾乎要吐出來。
-                下午請了病假回家，一路上感覺像在走鋼絲，深怕自己會在大街上吐出來。回到家裡，只能躺在床上休息，但那股噁心的感覺始終揮之不去，整個人疲憊不堪。
-                噩夢般的一天能快點結束。
-            』
-        」
-        日記五：「
-            紀錄時間：『2024年8月20日，星期二。』。
-            日記內容：『
-                今天是一個美好的日子！一大早醒來，陽光透過窗戶灑進房間，感覺整個人都被幸福包圍了。早餐時，我和家人一起享用了豐盛的早點，大家談笑風生，氣氛非常愉快～～
-                下午我獨自去公園散步，微風輕拂，花草的香氣讓人心曠神怡。
-                晚上，我邀請朋友來家裡，一起做了一頓美味的晚餐，點上蠟燭、放著柔和的音樂，一切都顯得那麼愉悅和溫馨！看著大家的笑容，我也感受到滿滿的幸福。
-                在這樣的一天結束時，我真心感激生命中的每一個美好時刻，感覺自己的心裡充滿了愛和感恩。
-            』
-        」
-    """
-    history_Diary = history_Diary.replace("\n", "")
-    history_Diary = history_Diary.replace(" ", "")
-    # print(history_Diary)
-    return history_Diary
-getDiary()
 # 機器人名稱
 def robotName():
     return "小蜜"
@@ -278,14 +157,6 @@ def updateSystem():
                 「{assistantName}」知道「現在時間」是「台灣時間{AboutTime.getCurrentTime()}」
                 最近的「各地區天氣預報」為「{weatherInfo}」
             """
-                    # 資訊一、「{assistantName}」與「{userName}」的「歷史聊天紀錄」為「{userChatHistory}」。
-                    #        當「{userName}」詢問或遇上某些問題，「{assistantName}」會先判斷該問題是否有出現在「歷史聊天紀錄」，若有，則會根據當中的資訊回答。
-                    # 資訊二、「{userName}」的「目前所在地」為「{getUserLocation()}」。
-                    # 資訊四、最近的「各地區天氣預報」為「{weatherInfo}」，當被問到「天氣」相關問題時
-                    #       「{assistantName}」會根據「{userName}」的「目前所在地」和「各地區天氣預報」等資訊判斷當地的天氣狀況，並給予關心。
-                    # 資訊五、「{userName}」會寫「日記」，當接收到「{userName}」寫下的「日記」，「{assistantName}」會根據「{userName}」的「日記」的內容，判斷「{userName}」情緒，並給予互動或關心。
-                    # 資訊五、「{userEmotions}」為「{userName}」的「情緒指數」，「{assistantName}」會根據「{userName}」情緒指數的變化，給予關心。
-                    # 「{assistantName}」會基於以上這些資訊與「{userName}」進行互動。
     system = system.replace("\n", "")
     system = system.replace(" ", "")
     return system
@@ -316,21 +187,20 @@ def welcome():
 
     # 找尋是否有歷史對話紀錄，若有則添加
     userChatHistory = getChatHistory(user_id)
-
     if userChatHistory != []:
         example_chat = example_chat[:1] + userChatHistory + example_chat[1:]
 
     # 使用者登入後的第一句話
     firstMsg = AboutTime.firstMessage()
     # 將使用者問候語加入歷史對話
-    user_message = {'role': 'user', 'content': f"「{userName}」：「{firstMsg}」"}
+    user_message = {'role': 'user', 'content': f"「{user_name}」：「{firstMsg}」"}
     example_chat.append(user_message)
 
     # 檢查使用者是否更名
-    if (user_name != userName):
-        for conversation in example_chat:
-            conversation['content'] = conversation['content'].replace(userName, user_name)
-        getUserName(user_name)
+    # if (user_name != userName):
+    #     for conversation in example_chat:
+    #         conversation['content'] = conversation['content'].replace(userName, user_name)
+    #     getUserName(user_name)
 
     # 生成回覆訊息
     message_assistant = client.chat(model=model, messages=example_chat)
@@ -377,6 +247,7 @@ def send_message_to_python():
 
     # 去除重複的對話
     example_chat = example_chat[:-2]
+    print(example_chat)
 
     # 找尋是否有歷史對話紀錄，若有則添加
     userChatHistory = getChatHistory(user_id)
@@ -384,11 +255,11 @@ def send_message_to_python():
     if userChatHistory != []:
         history_messages = example_chat + userChatHistory
 
-    # 檢查使用者是否更名
-    if (user_name != userName):
-        for conversation in history_messages:
-            conversation['content'] = conversation['content'].replace(userName, user_name)
-        getUserName(user_name)
+    # # 檢查使用者是否更名
+    # if (user_name != userName):
+    #     for conversation in history_messages:
+    #         conversation['content'] = conversation['content'].replace(userName, user_name)
+    #     getUserName(user_name)
 
     # 添加使用者回覆訊息至對話紀錄
     response_user = {'role': 'user', 'content': f'「{userName}」：「{user_message}」'}     # 將使用者訊息轉為模型可讀取型態
