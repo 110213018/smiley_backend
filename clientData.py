@@ -1,6 +1,7 @@
 import requests
 import json
 from datetime import datetime, timedelta
+import sys
 
 API_URL = "http://163.22.32.24/smiley_backend/analysis/getAnalysis.php"
 
@@ -128,15 +129,20 @@ def calculate_date_range():
     # #print(f"日期範圍: {start_date.strftime('%Y-%m-%d')} 到 {end_date.strftime('%Y-%m-%d')}")
     return start_date, end_date
 
-# # 示例用法
-# if __name__ == "__main__":
-#     user_id = "23"  
-#     start_date, end_date = calculate_date_range()
+# 示例用法
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        user_id = sys.argv[1]
+        print(f"從命令列接收到的 user_id 是：{user_id}")
+    else:
+        print("未提供 user_id，請在命令列中傳入參數")
 
-#     # 處理日期範圍內的情緒數據
-#     result = process_emotion_data(user_id, start_date, end_date)
+    start_date, end_date = calculate_date_range() #上週
 
-#     # 日分析
-#     dailyData = daily_analysis(user_id, datetime.now())
+    # 處理日期範圍內的情緒數據
+    result = process_emotion_data(user_id, start_date, end_date)
 
+    # 日分析
+    dailyData = daily_analysis(user_id, datetime.now())
+    print(f"start_date 的結果是 = {start_date}, end_date 的結果是 = {end_date}, result 的結果是 = {result}, dailyData 的結果是 = {dailyData}")
 
