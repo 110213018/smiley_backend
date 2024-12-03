@@ -8,6 +8,7 @@ import chooseEmoji
 import clientData # 商家頁面用的用戶圖表
 from waitress import serve
 from flask_cors import CORS
+from waitress import serve
 app = Flask(__name__)
 CORS(app)
 

@@ -15,7 +15,7 @@ $today = date("Y-m-d");
 
 // 查詢分析表中該用戶的最新情緒數據
 // Fetching the latest emotional data
-$sql = "SELECT sadness, disgust, `like`, anger, happiness, other, angel, monster FROM analysis WHERE user_id = ? ORDER BY id DESC LIMIT 1";
+$sql = "SELECT sadness, disgust, `like`, anger, happiness, other, angel, monster FROM analysis WHERE user_id = ? ORDER BY date DESC LIMIT 1";
 $stmt = $connectNow->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -31,9 +31,9 @@ if ($result->num_rows > 0) {
     $monster = explode('_', $monster_image)[0];
 
     // Logic for determining which flower to retrieve
-    if ($angel > $monster){
+    if ($row[$angel] > $row[$monster]){
         $flower = findFlower($connectNow, $angel, $angel_image);
-    } elseif ($angel < $monster) {
+    } elseif ($row[$angel] < $row[$monster]) {
         $flower = findFlower($connectNow, $monster, $monster_image);
     } else {
         $angel_or_monster = rand(0, 1) ? $angel : $monster;
