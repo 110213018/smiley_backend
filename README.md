@@ -16,20 +16,18 @@ An AI-powered diary application backend that supports emotion analysis, chatbot 
    git clone https://github.com/110213018/smiley_backend
    ```
    > Place the project in your C:/xampp/htdocs/{directory}.
-2. **Set up the database**
-   Import smiley.sql into MySQL.
-   ```bash
-   mysql -u root -p your_database_name < smiley.sql
-3. **Start Ollama local server**
+2. **Set up the database**</br>
+   > import smiley.sql into MySQL.</br>
+4. **Start Ollama local server**
    ```bash
    ollama serve
-4. **Run the chatbot script (inside Chatbot_screen folder)**
+5. **Run the chatbot script (inside Chatbot_screen folder)**
    ```bash
    python TaiwanLLM_Chatbot_.py
-5. **Run the backend**
+6. **Run the backend**
    ```bash
    flask run
-6. **Run the frontend**
+7. **Run the frontend**
    ```bash
    flutter run
 
